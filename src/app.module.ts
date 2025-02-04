@@ -3,7 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
-import { JwtModule } from '@nestjs/jwt';  // Ajout de JwtModule
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
+import { MoviesModule } from './movies/movies.module';
+import { HttpModule } from '@nestjs/axios';
+
 
 @Module({
   imports: [
@@ -14,15 +18,21 @@ import { JwtModule } from '@nestjs/jwt';  // Ajout de JwtModule
       username: 'postgres',
       password: 'admin',
       database: 'MovieBooker',
-      entities: [User], // Charger l'entité User
-      synchronize: true, // Crée automatiquement les tables
+      entities: [User],
+      synchronize: true, 
     }),
     JwtModule.register({
-      secret: 'ton_secret', // Utilise un secret sécurisé ou une variable d'environnement
-      signOptions: { expiresIn: '60m' }, // Optionnel : configure l'expiration du JWT
+      secret: 'ton_secret',
+      signOptions: { expiresIn: '60m' },
     }),
     AuthModule,
     UsersModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    HttpModule,
+    MoviesModule,
   ],
 })
 export class AppModule {}

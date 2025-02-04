@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
+console.log('TMDB_API_KEY (dotenv):', process.env.TMDB_API_KEY);
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

@@ -103,3 +103,5 @@ npm install --save @nestjs/jwt
 npm install --save @nestjs/swagger swagger-ui-express
 npm install @nestjs/passport passport passport-jwt
 npm install --save-dev @types/passport-jwt
+npm install @nestjs/axios dotenv
+npm install @nestjs/config
