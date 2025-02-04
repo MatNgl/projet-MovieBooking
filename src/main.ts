@@ -6,9 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('API Authentication')
-    .setDescription('API pour tester l\'authentification')
+    .setTitle('Movie Booker API')
+    .setDescription('API pour la gestion des utilisateurs et des réservations de films')
     .setVersion('1.0')
+    .addTag('Auth')
     .addBearerAuth()
     .build();
 
