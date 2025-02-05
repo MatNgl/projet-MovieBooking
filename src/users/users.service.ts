@@ -1,35 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(username: string, password: string): Promise<User> {
-    const user = this.usersRepository.create({ username, password });
-    return this.usersRepository.save(user);
+    const user = new this.userModel({ username, password });
+    return user.save();
   }
 
-  async findOne(username: string): Promise<User | undefined> {
-    const user = await this.usersRepository.findOne({ where: { username } });
-    return user ?? undefined;
-  }  
+  async findOne(username: string): Promise<User | null> {
+    return this.userModel.findOne({ username }).exec();
+  }
 
-  async findOneById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } }); 
-    if (!user) {
-      throw new Error('Utilisateur non trouvé');
-    }
-    return user;
+  async findOneById(id: string): Promise<User | null> {
+    return this.userModel.findById(id).exec();
   }
 
   async findOneByUsername(username: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { username } });
+    return this.userModel.findOne({ username }).exec();
   }
-  
 }

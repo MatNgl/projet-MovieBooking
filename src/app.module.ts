@@ -1,38 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { MoviesModule } from './movies/movies.module';
-import { HttpModule } from '@nestjs/axios';
-
+import { MongoConnectionService } from './mongo-connection.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'admin',
-      database: 'MovieBooker',
-      entities: [User],
-      synchronize: true, 
-    }),
-    JwtModule.register({
-      secret: 'ton_secret',
-      signOptions: { expiresIn: '60m' },
-    }),
-    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/mydb'),
     UsersModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-    HttpModule,
+    AuthModule,
     MoviesModule,
   ],
+  providers: [MongoConnectionService],
 })
 export class AppModule {}

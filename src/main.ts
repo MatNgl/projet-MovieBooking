@@ -1,20 +1,19 @@
+// src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as dotenv from 'dotenv';
-dotenv.config();
-console.log('TMDB_API_KEY (dotenv):', process.env.TMDB_API_KEY);
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Configuration de Swagger
   const config = new DocumentBuilder()
-    .setTitle('Movie Booker API')
-    .setDescription('API pour la gestion des utilisateurs et des réservations de films')
+    .setTitle('API Movie Booking')
+    .setDescription('Documentation de l\'API Movie Booking')
     .setVersion('1.0')
-    .addTag('Auth')
-    .addBearerAuth()
+    .addBearerAuth() // Si tu utilises l'authentification avec JWT
     .build();
-
+  
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 

@@ -13,21 +13,19 @@ export class MoviesService {
     private readonly configService: ConfigService,
   ) {
     this.baseUrl = this.configService.get<string>('TMDB_BASE_URL', 'https://api.themoviedb.org/3');
-    this.apiKey = this.configService.get<string>('TMDB_API_KEY');
+    this.apiKey = this.configService.get<string>('TMDB_API_KEY', 'd89894ee284d5d1c7e55d895e7139cc6');
     
     // Si API_KEY n'est pas défini, lève une exception
     if (!this.apiKey) {
       throw new Error('TMDB_API_KEY is not defined in environment variables');
     }
-  
-    console.log('TMDB_API_KEY:', this.apiKey);
   }  
   
 
   // Récupérer les films en salle actuellement
   async getNowPlayingMovies(page: number = 1): Promise<any> {
     try {
-      const url = `${this.baseUrl}/movie/now_playing?api_key=${this.apiKey}&language=en-US&page=${page}`;
+      const url = `${this.baseUrl}/movie/now_playing?api_key=${this.apiKey}&language=fr-FR&page=${page}`;
       const response = await firstValueFrom(this.httpService.get(url));
       return response.data;
     } catch (error) {
@@ -37,18 +35,19 @@ export class MoviesService {
 
   // Rechercher un film par titre
   async searchMovies(query: string, page: number = 1): Promise<any> {
-    if (!query) {
+    if (!query || query.trim() === '') {
       throw new HttpException('Le paramètre query est requis', HttpStatus.BAD_REQUEST);
     }
-
+  
     try {
       const url = `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(query)}&page=${page}`;
       const response = await firstValueFrom(this.httpService.get(url));
       return response.data;
     } catch (error) {
+      console.error('Erreur dans la recherche de films', error);
       throw new HttpException('Erreur lors de la recherche de films', HttpStatus.BAD_REQUEST);
     }
-  }
+  }  
 
   // Obtenir les détails d’un film spécifique
   async getMovieDetails(movieId: number): Promise<any> {
@@ -57,7 +56,7 @@ export class MoviesService {
     }
 
     try {
-      const url = `${this.baseUrl}/movie/${movieId}?api_key=${this.apiKey}&language=en-US`;
+      const url = `${this.baseUrl}/movie/${movieId}?api_key=${this.apiKey}&language=fr-FR`;
       const response = await firstValueFrom(this.httpService.get(url));
       return response.data;
     } catch (error) {
@@ -68,7 +67,7 @@ export class MoviesService {
   // Obtenir la liste des genres de films
   async getMovieGenres(): Promise<any> {
     try {
-      const url = `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=en-US`;
+      const url = `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=fr-FR`;
       const response = await firstValueFrom(this.httpService.get(url));
       return response.data;
     } catch (error) {
