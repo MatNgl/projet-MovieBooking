@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MoviesModule } from './movies/movies.module';
 import { MongoConnectionService } from './mongo-connection.service';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MongoConnectionService } from './mongo-connection.service';
     UsersModule,
     AuthModule,
     MoviesModule,
+    ReservationModule
   ],
   providers: [MongoConnectionService],
 })
